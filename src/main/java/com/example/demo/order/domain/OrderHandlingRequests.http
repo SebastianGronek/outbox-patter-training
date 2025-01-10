@@ -1,0 +1,9 @@
+### Send POST request with json body
+POST localhost:8080/order
+Content-Type: application/json
+
+{
+  "orderId": "36d2fd5c-5841-47cd-99ce-1e53b4d8801f",
+  "productName": "Coca",
+  "quantity": "1"
+}
