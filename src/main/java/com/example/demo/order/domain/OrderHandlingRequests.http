@@ -4,6 +4,19 @@ Content-Type: application/json
 
 {
   "orderId": "36d2fd5c-5841-47cd-99ce-1e53b4d8801f",
-  "productName": "Coca",
+  "productName": "Cola",
   "quantity": "1"
 }
+
+### Send POST request with json body
+POST localhost:8080/order
+Content-Type: application/json
+
+{
+  "orderId": "fc620510-058d-4a5a-a480-53595ba814a5",
+  "productName": "Ice cream",
+  "quantity": "5"
+}
+
+### Send GET request
+GET localhost:8080/order/36d2fd5c-5841-47cd-99ce-1e53b4d8801f

@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: transactionTraining
+  datasource:
+    ## PostgreSQL
+    url: jdbc:postgresql://localhost:8888/postgres
+    username: sebastian
+    password: password
+    ## default connection pool
+    hikari:
+      connectionTimeout: 20000
+      maximumPoolSize: 5
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    # create and drop table, good for testing, production set to none or comment it
+    hibernate:
+      ddl-auto: create-drop
+
+
+
+
+

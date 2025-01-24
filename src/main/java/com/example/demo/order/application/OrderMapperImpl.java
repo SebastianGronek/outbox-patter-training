@@ -8,6 +8,6 @@ import org.springframework.stereotype.Service;
 class OrderMapperImpl implements OrderMapper {
     @Override
     public Order toOrder(OrderInput orderInput) {
-        return new Order(orderInput.orderID(), orderInput.productName(), orderInput.quantity());
+        return new Order(orderInput.orderId(), orderInput.productName(), orderInput.quantity());
     }
 }
