@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    ## PostgreSQL
+    url: jdbc:postgresql://localhost:8889/postgres
+    username: sebastian
+    password: password
+  jpa:
+#    database-platform: org.hibernate.dialect.H2Dialect
+    # create and drop table, good for testing, production set to none or comment it
+    hibernate:
+      ddl-auto: create-drop
+
+
+
+
+

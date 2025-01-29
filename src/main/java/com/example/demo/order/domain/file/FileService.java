@@ -6,5 +6,5 @@ import com.example.demo.order.domain.OutboxMessage;
 import java.io.IOException;
 
 public interface FileService {
-    void writeFile(OutboxMessage outboxMessage);
+    String writeFile(OutboxMessage outboxMessage);
 }

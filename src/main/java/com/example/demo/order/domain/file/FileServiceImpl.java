@@ -11,7 +11,7 @@ import java.io.IOException;
 @Slf4j
 public class FileServiceImpl implements FileService {
 
-    public void writeFile(OutboxMessage outboxMessage) {
+    public String writeFile(OutboxMessage outboxMessage) {
         String path = System.getProperty("user.dir") + "/src/main/resources/files/";
         String filename = path + outboxMessage.getOrderId() + ".txt";
         String content = "Order ID: " + outboxMessage.getOrderId() + "\nProduct Name: " + outboxMessage.getProductName() + "\nQuantity: " + outboxMessage.getQuantity();
@@ -21,5 +21,6 @@ public class FileServiceImpl implements FileService {
         } catch (IOException e) {
             log.info("Error writing file: " + e.getMessage());
         }
+        return filename;
     }
 }
