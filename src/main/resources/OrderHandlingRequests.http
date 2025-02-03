@@ -17,6 +17,17 @@ Content-Type: application/json
   "productName": "Ice cream",
   "quantity": "5"
 }
+### Send POST request with json body
+POST localhost:8080/orderFailed
+Content-Type: application/json
+
+{
+  "orderId": "f61cea87-7cf7-4973-9b54-e0de46067839",
+  "productName": "Bread",
+  "quantity": "2"
+}
+
+
 
 ### Send GET request
 GET localhost:8080/order/36d2fd5c-5841-47cd-99ce-1e53b4d8801f

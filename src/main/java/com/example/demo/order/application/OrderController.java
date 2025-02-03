@@ -24,6 +24,11 @@ class OrderController {
         orderService.handleOrder(orderInput);
     }
 
+    @PostMapping("/orderFailed")
+    void orderFailed(@RequestBody OrderInput orderInput) {
+        orderService.handleOrderFailed(orderInput);
+    }
+
     @GetMapping("/order/{id}")
     ResponseEntity<OrderDto> getOrderById(@PathVariable String id) {
         OrderDto orderByOrderId = orderService.getOrderByOrderId(UUID.fromString(id));

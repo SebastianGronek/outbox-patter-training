@@ -26,6 +26,16 @@ class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
+    public void handleOrderFailed(OrderInput orderInput) {
+        log.info("Handling order with orderId: {}, product name: {}, quantity: {}", orderInput.orderId(), orderInput.productName(), orderInput.quantity());
+        orderRepository.save(orderMapper.toOrder(orderInput));
+        log.info("Order saved");
+        outboxRepository.saveAndThrowError();
+    }
+
+
+    @Override
     public OrderDto getOrderByOrderId(UUID orderId) {
         log.info("Getting order with orderId: {}", orderId);
         Order orderByOrderId = orderRepository.findOrderByOrderId(orderId);

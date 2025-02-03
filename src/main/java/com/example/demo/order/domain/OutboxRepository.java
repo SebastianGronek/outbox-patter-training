@@ -6,4 +6,8 @@ import java.util.UUID;
 
 public interface OutboxRepository extends JpaRepository<OutboxMessage, Long> {
     OutboxMessage findOutboxMessageByOrderId(UUID orderId);
+
+   default OutboxMessage saveAndThrowError(){
+        throw new RuntimeException("Error");
+    };
 }
