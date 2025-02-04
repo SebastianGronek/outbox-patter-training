@@ -12,19 +12,21 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class OutboxMessageListener {
     private final FileService fileService;
+
     static {
         log.info("OutboxMessageListener loaded");
     }
+
     @PostPersist
     public void postPersist(OutboxMessage outboxMessage) {
         log.info("OutboxMessageListener triggered for OutboxMessage: {}", outboxMessage);
         try {
             fileService.writeFile(outboxMessage);
+            fileService.setWasSendToTrue(outboxMessage.getOrderId());
             log.info("FileService.writeFile called successfully");
 
         } catch (Exception e) {
             log.error("Error writing file: " + e.getMessage());
         }
-
     }
 }

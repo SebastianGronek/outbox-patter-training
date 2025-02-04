@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.util.UUID;
@@ -26,6 +27,8 @@ public class OutboxMessage {
     UUID orderId;
     String productName;
     Integer quantity;
+    @Setter
+    Boolean wasSend = false;
 
     public OutboxMessage(UUID orderId, String productName, Integer quantity) {
         this.orderId = orderId;

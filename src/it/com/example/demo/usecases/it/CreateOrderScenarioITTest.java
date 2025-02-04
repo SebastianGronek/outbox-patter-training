@@ -55,7 +55,7 @@ class CreateOrderScenarioITTest {
     void testCreateOrder() {
         // Given
         UUID orderId = UUID.randomUUID();
-        String productName = "Test Product";
+        String productName = "proper";
         OrderInput orderInput = new OrderInput(orderId, productName, 1);
         // When
         orderService.handleOrder(orderInput);
@@ -63,13 +63,31 @@ class CreateOrderScenarioITTest {
         assertThat(orderRepository.findAll()).isNotEmpty();
         assertThat(outboxRepository.findAll()).isNotEmpty();
         verify(fileService).writeFile(any());
+        verify(fileService).setWasSendToTrue(any());
+        assertThat(outboxRepository.findOutboxMessageByOrderId(orderId).getWasSend()).isEqualTo(true);
+    }
+
+    @Test
+    void testCreateOrderWasCommittedButNotWrittenDown() {
+        // Given
+        UUID orderId = UUID.randomUUID();
+        String productName = "improper";
+        OrderInput orderInput = new OrderInput(orderId, productName, 1);
+        // When
+        orderService.handleOrder(orderInput);
+        // Then
+        assertThat(orderRepository.findAll()).isNotEmpty();
+        assertThat(outboxRepository.findAll()).isNotEmpty();
+        assertThat(outboxRepository.findOutboxMessageByOrderId(orderId).getWasSend()).isEqualTo(false);
+        verify(fileService).writeFile(any());
+        verify(fileService, never()).setWasSendToTrue(any());
     }
 
     @Test
     void testCreateOrderAndRollback() {
         // Given
         UUID orderId = UUID.randomUUID();
-        String productName = "Test Product";
+        String productName = "proper";
         OrderInput orderInput = new OrderInput(orderId, productName, 1);
         // When
 
@@ -80,5 +98,6 @@ class CreateOrderScenarioITTest {
         assertThat(orderRepository.findAll()).isEmpty();
         assertThat(outboxRepository.findAll()).isEmpty();
         verify(fileService, never()).writeFile(any());
+        verify(fileService, never()).setWasSendToTrue(any());
     }
 }
