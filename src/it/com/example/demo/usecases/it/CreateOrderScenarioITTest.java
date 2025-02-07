@@ -93,7 +93,6 @@ class CreateOrderScenarioITTest {
 
         assertThrows(RuntimeException.class, () -> orderService.handleOrderFailed(orderInput));
 
-
         // Then
         assertThat(orderRepository.findAll()).isEmpty();
         assertThat(outboxRepository.findAll()).isEmpty();

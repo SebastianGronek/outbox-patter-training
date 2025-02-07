@@ -15,11 +15,11 @@ import java.util.UUID;
 @RequiredArgsConstructor
 class FileServiceTestImplementation implements FileService {
 
-    OutboxRepository outboxRepository;
+    private final OutboxRepository outboxRepository;
 
     @Override
     public String writeFile(OutboxMessage outboxMessage) {
-        if(outboxMessage.getProductName().equals("proper")){
+        if (outboxMessage.getProductName().equals("proper")) {
             log.info("Writing file for successful implementation");
             return "file.txt";
         }
@@ -32,7 +32,7 @@ class FileServiceTestImplementation implements FileService {
         OutboxMessage outboxMessage = outboxRepository.findOutboxMessageByOrderId(orderId);
         if (outboxMessage != null) {
             outboxMessage.setWasSend(true);
-            log.info("Setting wasSend to true for test implementation: "+outboxMessage.getWasSend());
+            log.info("Setting wasSend to true for test implementation: " + outboxMessage.getWasSend());
             outboxRepository.save(outboxMessage);
             return true;
         }

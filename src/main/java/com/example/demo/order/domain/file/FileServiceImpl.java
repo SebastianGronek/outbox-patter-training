@@ -37,6 +37,7 @@ public class FileServiceImpl implements FileService {
         OutboxMessage outboxMessage = outboxRepository.findOutboxMessageByOrderId(orderId);
         if (outboxMessage != null) {
             outboxMessage.setWasSend(true);
+            log.info("Setting wasSend to true for implementation: " + outboxMessage.getWasSend());
             outboxRepository.save(outboxMessage);
             return true;
         }
