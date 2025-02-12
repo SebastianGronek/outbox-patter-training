@@ -1,6 +1,7 @@
 package com.example.demo.order.domain;
 
-import com.example.demo.order.infrastrucure.OutboxMessageListener;
+import com.example.demo.order.infrastructure.OutboxMessageListener;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
@@ -24,11 +25,13 @@ public class OutboxMessage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
+    @Column(unique = true)
     UUID orderId;
+    @Setter
     String productName;
     Integer quantity;
     @Setter
-    Boolean wasSend = false;
+    Boolean wasWrittenToDisc = false;
 
     public OutboxMessage(UUID orderId, String productName, Integer quantity) {
         this.orderId = orderId;

@@ -1,4 +1,4 @@
-package com.example.demo.order.infrastrucure;
+package com.example.demo.order.infrastructure;
 
 import com.example.demo.order.domain.OutboxMessage;
 import com.example.demo.order.domain.OutboxMessageEvent;

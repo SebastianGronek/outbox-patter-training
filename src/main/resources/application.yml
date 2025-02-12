@@ -11,7 +11,7 @@ spring:
       connectionTimeout: 20000
       maximumPoolSize: 5
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     # create and drop table, good for testing, production set to none or comment it
     hibernate:
       ddl-auto: create-drop

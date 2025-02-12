@@ -19,6 +19,7 @@ public class FileServiceImpl implements FileService {
     private final OutboxRepository outboxRepository;
 
     public String writeFile(OutboxMessage outboxMessage) {
+        imitateErrorForRightProductName(outboxMessage);
         String path = System.getProperty("user.dir") + "/src/main/resources/files/";
         String filename = path + outboxMessage.getOrderId() + ".txt";
         String content = "Order ID: " + outboxMessage.getOrderId() + "\nProduct Name: " + outboxMessage.getProductName() + "\nQuantity: " + outboxMessage.getQuantity();
@@ -31,13 +32,22 @@ public class FileServiceImpl implements FileService {
         return filename;
     }
 
+    private void imitateErrorForRightProductName(OutboxMessage outboxMessage) {
+        if (outboxMessage.getProductName().equals("Illegal product")) {
+            outboxMessage.setProductName("Legal product");
+            log.info("Saving product with name changed to:" + outboxMessage.getProductName());
+            outboxRepository.save(outboxMessage);
+            throw new RuntimeException("Failed to save illegal product");
+        }
+    }
+
     @Override
-    public boolean setWasSendToTrue(UUID orderId) {
+    public boolean setWasWrittenToDiscToTrue(UUID orderId) {
         log.info("Setting wasSend to true for production implementation");
         OutboxMessage outboxMessage = outboxRepository.findOutboxMessageByOrderId(orderId);
         if (outboxMessage != null) {
-            outboxMessage.setWasSend(true);
-            log.info("Setting wasSend to true for implementation: " + outboxMessage.getWasSend());
+            outboxMessage.setWasWrittenToDisc(true);
+            log.info("Setting wasSend to true for implementation: " + outboxMessage.getWasWrittenToDisc());
             outboxRepository.save(outboxMessage);
             return true;
         }

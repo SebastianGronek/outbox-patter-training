@@ -28,11 +28,11 @@ class FileServiceTestImplementation implements FileService {
     }
 
     @Override
-    public boolean setWasSendToTrue(UUID orderId) {
+    public boolean setWasWrittenToDiscToTrue(UUID orderId) {
         OutboxMessage outboxMessage = outboxRepository.findOutboxMessageByOrderId(orderId);
         if (outboxMessage != null) {
-            outboxMessage.setWasSend(true);
-            log.info("Setting wasSend to true for test implementation: " + outboxMessage.getWasSend());
+            outboxMessage.setWasWrittenToDisc(true);
+            log.info("Setting wasSend to true for test implementation: " + outboxMessage.getWasWrittenToDisc());
             outboxRepository.save(outboxMessage);
             return true;
         }

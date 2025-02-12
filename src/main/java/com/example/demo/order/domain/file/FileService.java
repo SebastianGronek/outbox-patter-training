@@ -7,5 +7,5 @@ import java.util.UUID;
 public interface FileService {
     String writeFile(OutboxMessage outboxMessage);
 
-    boolean setWasSendToTrue(UUID orderId);
+    boolean setWasWrittenToDiscToTrue(UUID orderId);
 }

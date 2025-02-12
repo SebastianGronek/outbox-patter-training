@@ -63,8 +63,8 @@ class CreateOrderScenarioITTest {
         assertThat(orderRepository.findAll()).isNotEmpty();
         assertThat(outboxRepository.findAll()).isNotEmpty();
         verify(fileService).writeFile(any());
-        verify(fileService).setWasSendToTrue(any());
-        assertThat(outboxRepository.findOutboxMessageByOrderId(orderId).getWasSend()).isEqualTo(true);
+        verify(fileService).setWasWrittenToDiscToTrue(any());
+        assertThat(outboxRepository.findOutboxMessageByOrderId(orderId).getWasWrittenToDisc()).isEqualTo(true);
     }
 
     @Test
@@ -78,9 +78,9 @@ class CreateOrderScenarioITTest {
         // Then
         assertThat(orderRepository.findAll()).isNotEmpty();
         assertThat(outboxRepository.findAll()).isNotEmpty();
-        assertThat(outboxRepository.findOutboxMessageByOrderId(orderId).getWasSend()).isEqualTo(false);
+        assertThat(outboxRepository.findOutboxMessageByOrderId(orderId).getWasWrittenToDisc()).isEqualTo(false);
         verify(fileService).writeFile(any());
-        verify(fileService, never()).setWasSendToTrue(any());
+        verify(fileService, never()).setWasWrittenToDiscToTrue(any());
     }
 
     @Test
@@ -97,6 +97,6 @@ class CreateOrderScenarioITTest {
         assertThat(orderRepository.findAll()).isEmpty();
         assertThat(outboxRepository.findAll()).isEmpty();
         verify(fileService, never()).writeFile(any());
-        verify(fileService, never()).setWasSendToTrue(any());
+        verify(fileService, never()).setWasWrittenToDiscToTrue(any());
     }
 }

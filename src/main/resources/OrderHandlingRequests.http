@@ -13,9 +13,19 @@ POST localhost:8080/order
 Content-Type: application/json
 
 {
-  "orderId": "fc620510-058d-4a5a-a480-53595ba814a5",
+  "orderId": "3161f490-c06d-4d87-abf8-85e260255ee1",
   "productName": "Ice cream",
   "quantity": "5"
+}
+
+### Send POST request with json body
+POST localhost:8080/order
+Content-Type: application/json
+
+{
+  "orderId": "fc620510-058d-4a5a-a480-53595ba814a5",
+  "productName": "Illegal product",
+  "quantity": "2"
 }
 ### Send POST request with json body
 POST localhost:8080/orderFailed

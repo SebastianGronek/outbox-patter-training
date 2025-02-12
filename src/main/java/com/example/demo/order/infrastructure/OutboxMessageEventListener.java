@@ -1,4 +1,4 @@
-package com.example.demo.order.infrastrucure;
+package com.example.demo.order.infrastructure;
 
 import com.example.demo.order.domain.OutboxMessageEvent;
 import com.example.demo.order.domain.file.FileService;
@@ -21,10 +21,10 @@ public class OutboxMessageEventListener {
         log.info("Handling OutboxMessageEvent for OutboxMessage: {}", event.getOutboxMessage());
         try {
             fileService.writeFile(event.getOutboxMessage());
-            fileService.setWasSendToTrue(event.getOutboxMessage().getOrderId());
+            fileService.setWasWrittenToDiscToTrue(event.getOutboxMessage().getOrderId());
             log.info("FileService.writeFile called successfully");
         } catch (Exception e) {
-            log.error("Error writing file in OutboxMessageEventListener: " + e.getMessage());
+            log.error("Error writing file in OutboxMessageEventListener: " + e.getMessage(), e);
         }
     }
 }
