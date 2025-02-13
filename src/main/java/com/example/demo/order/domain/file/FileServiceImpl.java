@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
@@ -22,10 +23,10 @@ public class FileServiceImpl implements FileService {
         imitateErrorForRightProductName(outboxMessage);
         String path = System.getProperty("user.dir") + "/src/main/resources/files/";
         String filename = path + outboxMessage.getOrderId() + ".txt";
-        String content = "Order ID: " + outboxMessage.getOrderId() + "\nProduct Name: " + outboxMessage.getProductName() + "\nQuantity: " + outboxMessage.getQuantity();
+        String content = "Order ID: " + outboxMessage.getOrderId() + "\nProduct Name: " + outboxMessage.getProductName() + "\nQuantity: " + outboxMessage.getQuantity() + "\nTime of creation: " + LocalDateTime.now();
         try (FileWriter fileWriter = new FileWriter(filename)) {
             fileWriter.write(content);
-            log.info("File written successfully");
+            log.info("File written successfully: " + filename);
         } catch (IOException e) {
             log.info("Error writing file: " + e.getMessage());
         }

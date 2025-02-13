@@ -8,9 +8,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 import java.util.UUID;
@@ -19,7 +18,7 @@ import java.util.UUID;
 @Table(name = "outbox")
 @NoArgsConstructor
 @ToString
-@Getter
+@Data
 @EntityListeners(OutboxMessageListener.class)
 public class OutboxMessage {
     @Id
@@ -27,10 +26,8 @@ public class OutboxMessage {
     Long id;
     @Column(unique = true)
     UUID orderId;
-    @Setter
     String productName;
     Integer quantity;
-    @Setter
     Boolean wasWrittenToDisc = false;
 
     public OutboxMessage(UUID orderId, String productName, Integer quantity) {
