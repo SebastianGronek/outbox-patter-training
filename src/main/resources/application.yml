@@ -15,10 +15,10 @@ spring:
     # create and drop table, good for testing, production set to none or comment it
     hibernate:
       ddl-auto: create-drop
-logging:
-  level:
-    org.springframework.orm.jpa: DEBUG
-    org.springframework.transaction: DEBUG
+#logging:
+#  level:
+#    org.springframework.orm.jpa: DEBUG
+#    org.springframework.transaction: DEBUG
 
 
 

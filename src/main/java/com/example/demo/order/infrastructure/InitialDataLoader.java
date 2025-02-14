@@ -4,12 +4,14 @@ import com.example.demo.order.domain.OutboxMessage;
 import com.example.demo.order.domain.OutboxRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
 @RequiredArgsConstructor
 @Component
+@Profile("!test")
 public class InitialDataLoader implements CommandLineRunner {
 
     private final OutboxRepository outboxRepository;

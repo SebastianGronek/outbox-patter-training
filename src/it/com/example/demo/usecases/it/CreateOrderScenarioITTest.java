@@ -23,6 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -90,13 +91,29 @@ class CreateOrderScenarioITTest {
         String productName = "proper";
         OrderInput orderInput = new OrderInput(orderId, productName, 1);
         // When
-
         assertThrows(RuntimeException.class, () -> orderService.handleOrderFailed(orderInput));
-
         // Then
         assertThat(orderRepository.findAll()).isEmpty();
         assertThat(outboxRepository.findAll()).isEmpty();
         verify(fileService, never()).writeFile(any());
         verify(fileService, never()).setWasWrittenToDiscToTrue(any());
+    }
+
+    @Test
+    void testCreateOrdersAndSchedulerWriteThemDownToDisc() throws InterruptedException {
+        // Given
+        String productName = "Illegal product";
+        // When
+        for (int i = 0; i < 9; i++) {
+            orderService.handleOrder(new OrderInput(UUID.randomUUID(), productName, i));
+        }
+//        Awaitility.await().until(() -> outboxRepository.findAll().size() == 9);
+        // Then
+
+        Thread.sleep(10000);
+        assertThat(orderRepository.findAll().size()).isEqualTo(9);
+        assertThat(outboxRepository.findAll().size()).isEqualTo(9);
+        verify(fileService, times(18)).writeFile(any());
+        verify(fileService, times(9)).setWasWrittenToDiscToTrue(any());
     }
 }

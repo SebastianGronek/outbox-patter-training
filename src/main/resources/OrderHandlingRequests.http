@@ -27,6 +27,17 @@ Content-Type: application/json
   "productName": "Illegal product",
   "quantity": "2"
 }
+
+### Send POST request with json body
+POST localhost:8080/order
+Content-Type: application/json
+
+{
+  "orderId": "f61cea87-7cf7-4973-9b54-e0de46067839",
+  "productName": "Illegal product",
+  "quantity": "2"
+}
+
 ### Send POST request with json body
 POST localhost:8080/orderFailed
 Content-Type: application/json

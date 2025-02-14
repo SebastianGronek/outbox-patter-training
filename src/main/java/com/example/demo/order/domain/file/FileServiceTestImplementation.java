@@ -19,12 +19,22 @@ class FileServiceTestImplementation implements FileService {
 
     @Override
     public String writeFile(OutboxMessage outboxMessage) {
-        if (outboxMessage.getProductName().equals("proper")) {
+        imitateErrorForRightProductName(outboxMessage);
+        if (outboxMessage.getProductName().equals("Legal product")) {
             log.info("Writing file for successful implementation");
             return "file.txt";
         }
         log.info("Writing file for failed implementation");
         throw new RuntimeException("Error in fileService");
+    }
+
+    private void imitateErrorForRightProductName(OutboxMessage outboxMessage) {
+        if (outboxMessage.getProductName().equals("Illegal product")) {
+            outboxMessage.setProductName("Legal product");
+            log.info("Saving product with name changed to:" + outboxMessage.getProductName());
+            outboxRepository.save(outboxMessage);
+            throw new RuntimeException("Failed to save illegal product");
+        }
     }
 
     @Override
