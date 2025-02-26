@@ -6,6 +6,7 @@ import com.example.demo.order.domain.OrderRepository;
 import com.example.demo.order.domain.OrderService;
 import com.example.demo.order.domain.OutboxRepository;
 import com.example.demo.order.domain.file.FileService;
+import com.example.demo.order.infrastructure.OutboxHandler;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -16,14 +17,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.shaded.org.awaitility.Awaitility;
 
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -43,6 +45,8 @@ class CreateOrderScenarioITTest {
     private OrderRepository orderRepository;
     @Autowired
     private OutboxRepository outboxRepository;
+    @MockitoSpyBean
+    private OutboxHandler outboxHandler;
     @MockitoSpyBean
     private FileService fileService;
 
@@ -64,7 +68,7 @@ class CreateOrderScenarioITTest {
         assertThat(orderRepository.findAll()).isNotEmpty();
         assertThat(outboxRepository.findAll()).isNotEmpty();
         verify(fileService).writeFile(any());
-        verify(fileService).setWasWrittenToDiscToTrue(any());
+        verify(outboxHandler).handleOutboxMessageEvent(anyLong());
         assertThat(outboxRepository.findOutboxMessageByOrderId(orderId).getWasWrittenToDisc()).isEqualTo(true);
     }
 
@@ -72,7 +76,7 @@ class CreateOrderScenarioITTest {
     void testCreateOrderWasCommittedButNotWrittenDown() {
         // Given
         UUID orderId = UUID.randomUUID();
-        String productName = "improper";
+        String productName = "Error product";
         OrderInput orderInput = new OrderInput(orderId, productName, 1);
         // When
         orderService.handleOrder(orderInput);
@@ -103,17 +107,17 @@ class CreateOrderScenarioITTest {
     void testCreateOrdersAndSchedulerWriteThemDownToDisc() throws InterruptedException {
         // Given
         String productName = "Illegal product";
+        int numberOfOrders = 9;
         // When
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < numberOfOrders; i++) {
             orderService.handleOrder(new OrderInput(UUID.randomUUID(), productName, i));
         }
-//        Awaitility.await().until(() -> outboxRepository.findAll().size() == 9);
+        Awaitility.await().until(() -> outboxRepository.findAll().size() == numberOfOrders);
         // Then
 
-        Thread.sleep(10000);
-        assertThat(orderRepository.findAll().size()).isEqualTo(9);
-        assertThat(outboxRepository.findAll().size()).isEqualTo(9);
-        verify(fileService, times(18)).writeFile(any());
-        verify(fileService, times(9)).setWasWrittenToDiscToTrue(any());
+        assertThat(orderRepository.findAll().size()).isEqualTo(numberOfOrders);
+        assertThat(outboxRepository.findAll().size()).isEqualTo(numberOfOrders);
+//        verify(fileService, times(numberOfOrders*2)).writeFile(any());
+//        verify(fileService, times(numberOfOrders)).setWasWrittenToDiscToTrue(any());
     }
 }

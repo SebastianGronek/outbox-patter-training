@@ -2,7 +2,6 @@ package com.example.demo.order.infrastructure;
 
 import com.example.demo.order.domain.OutboxMessage;
 import com.example.demo.order.domain.OutboxRepository;
-import com.example.demo.order.domain.file.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +17,7 @@ import java.util.List;
 public class FileWritingReAttemptScheduler {
     private static final int BATCH_SIZE = 3;
     private final OutboxRepository outboxRepository;
-    private final FileService fileService;
+    private final OutboxHandler outboxHandler;
     private final TransactionTemplate requiredTx;
 
 
@@ -32,25 +31,13 @@ public class FileWritingReAttemptScheduler {
 
     public boolean reattemptWritingToDisk() {
         return requiredTx.execute((status) -> {
-            List<OutboxMessage> messages = outboxRepository.findOutboxMessagesByWasWrittenToDisc(false, Pageable.ofSize(BATCH_SIZE));
+            List<OutboxMessage> messages = outboxRepository.findIdsByWasWrittenToDisc(false, Pageable.ofSize(BATCH_SIZE));
             log.info("Found {} messages to reattempt writing to disk", messages.size());
             for (OutboxMessage message : messages) {
-                reattemptWritingToDisk(message);
+                outboxHandler.handleOutboxMessageEvent(message.getId());
             }
             return messages.size() == BATCH_SIZE;
         });
 
     }
-
-    private void reattemptWritingToDisk(OutboxMessage message) {
-        try {
-            fileService.writeFile(message);
-            log.info("Reattempting to write message to disk: " + message);
-            message.setWasWrittenToDisc(true);
-            outboxRepository.save(message);
-        } catch (Exception e) {
-            log.error("Failed to write message to disk during reattempt: " + message);
-        }
-    }
-
 }

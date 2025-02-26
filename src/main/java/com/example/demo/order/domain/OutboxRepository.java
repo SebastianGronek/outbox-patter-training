@@ -10,10 +10,13 @@ import java.util.UUID;
 
 public interface OutboxRepository extends JpaRepository<OutboxMessage, Long> {
     OutboxMessage findOutboxMessageByOrderId(UUID orderId);
-    @Lock(LockModeType.PESSIMISTIC_READ)
-    List<OutboxMessage> findOutboxMessagesByWasWrittenToDisc(boolean wasSend, Pageable limit);
 
-   default OutboxMessage saveAndThrowError(){
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    OutboxMessage findOutboxMessagesById(long id);
+
+    List<OutboxMessage> findIdsByWasWrittenToDisc(boolean wasSend, Pageable limit);
+
+    default OutboxMessage saveAndThrowError() {
         throw new RuntimeException("Error");
-    };
+    }
 }

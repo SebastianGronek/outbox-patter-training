@@ -4,14 +4,12 @@ import com.example.demo.order.domain.OutboxMessage;
 import com.example.demo.order.domain.OutboxRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
-@Service
+//@Service
 @Slf4j
-@Profile("test")
+//@Profile("test")
 @RequiredArgsConstructor
 class FileServiceTestImplementation implements FileService {
 

@@ -4,8 +4,8 @@ import com.example.demo.order.domain.OutboxMessage;
 import com.example.demo.order.domain.OutboxRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -14,7 +14,7 @@ import java.util.UUID;
 
 @Service
 @Slf4j
-@Profile("!test")
+//@Profile("!test")
 @RequiredArgsConstructor
 public class FileServiceImpl implements FileService {
     private final OutboxRepository outboxRepository;
@@ -39,10 +39,13 @@ public class FileServiceImpl implements FileService {
             log.info("Saving product with name changed to:" + outboxMessage.getProductName());
             outboxRepository.save(outboxMessage);
             throw new RuntimeException("Failed to save illegal product");
+        } else if (outboxMessage.getProductName().equals("Error product")) {
+            throw new RuntimeException("Failed to save error product");
         }
     }
 
     @Override
+    @Transactional
     public boolean setWasWrittenToDiscToTrue(UUID orderId) {
         log.info("Setting wasSend to true for production implementation");
         OutboxMessage outboxMessage = outboxRepository.findOutboxMessageByOrderId(orderId);
