@@ -9,7 +9,7 @@ spring:
     ## default connection pool
     hikari:
       connectionTimeout: 20000
-      maximumPoolSize: 5
+      maximumPoolSize: 20
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     # create and drop table, good for testing, production set to none or comment it

@@ -5,8 +5,6 @@ import com.example.demo.order.domain.OutboxRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.UUID;
-
 //@Service
 @Slf4j
 //@Profile("test")
@@ -33,17 +31,5 @@ class FileServiceTestImplementation implements FileService {
             outboxRepository.save(outboxMessage);
             throw new RuntimeException("Failed to save illegal product");
         }
-    }
-
-    @Override
-    public boolean setWasWrittenToDiscToTrue(UUID orderId) {
-        OutboxMessage outboxMessage = outboxRepository.findOutboxMessageByOrderId(orderId);
-        if (outboxMessage != null) {
-            outboxMessage.setWasWrittenToDisc(true);
-            log.info("Setting wasSend to true for test implementation: " + outboxMessage.getWasWrittenToDisc());
-            outboxRepository.save(outboxMessage);
-            return true;
-        }
-        return false;
     }
 }

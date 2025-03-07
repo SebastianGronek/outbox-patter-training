@@ -37,7 +37,7 @@ public class InitialDataLoader implements CommandLineRunner {
         message3.setProductName("Product 3");
         message3.setQuantity(3);
         message3.setOrderId(UUID.randomUUID());
-        message3.setWasWrittenToDisc(true);
+        message3.setWasWrittenToDisc(false);
         outboxRepository.save(message3);
 
         OutboxMessage message4 = new OutboxMessage();

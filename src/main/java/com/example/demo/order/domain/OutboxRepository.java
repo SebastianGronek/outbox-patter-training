@@ -14,7 +14,10 @@ public interface OutboxRepository extends JpaRepository<OutboxMessage, Long> {
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     OutboxMessage findOutboxMessagesById(long id);
 
+    //TODO: change return value to list<Long>
     List<OutboxMessage> findIdsByWasWrittenToDisc(boolean wasSend, Pageable limit);
+
+    int countByWasWrittenToDisc(boolean wasSend);
 
     default OutboxMessage saveAndThrowError() {
         throw new RuntimeException("Error");
